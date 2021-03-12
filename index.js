@@ -9,10 +9,8 @@ const $ = require('jquery');
 
 async function main() {
   try {
-
-  try {
-    const globber = await glob.create("**/*index.html")
-    const files = await globber.glob()
+    const globber = await glob.create('**/*index.html');
+    const files = await globber.glob();
 
     const ruleImageAlt = new Rule({
       name: 'All img must have alt',
@@ -38,8 +36,8 @@ async function main() {
       },
     });
 
-    console.log(files[0])
-    const dom = await new JSDOM.fromFile( files[0] );
+    console.log(files[0]);
+    const dom = await new JSDOM.fromFile(files[0]);
     dom.window.$ = $(dom.window);
     const reporter = new Reporter();
 
