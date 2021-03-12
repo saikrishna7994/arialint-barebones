@@ -67,7 +67,12 @@ async function main() {
       dom.window.$ = $(dom.window);
       ruleImageAlt.applyRule(dom.window, reporter);
       rulePageLang.applyRule(dom.window, reporter);
+      console.log('A');
       const msg = reporter.print();
+      console.log('B');
+      console.log(reporter);
+      console.log(msg);
+      console.log('C');
 
       const o = {
         owner: owner,
