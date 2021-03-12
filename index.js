@@ -58,13 +58,27 @@ async function main() {
       },
     });
 
+    const sha = github.context.sha;
+    const [owner, repo] = core.getInput('repository').split('/');
+    const octokit = github.getOctokit(core.getInput('token'));
+
     const reporter = new Reporter();
-    JSDOM.fromFile(files[0]).then((dom) => {
-      dom.window.$ = $(dom.window);
-      ruleImageAlt.applyRule(dom.window, reporter);
-      rulePageLang.applyRule(dom.window, reporter);
-      console.log(reporter);
-    });
+    const dom = await JSDOM.fromFile(files[0]);
+    // JSDOM.fromFile(files[0]).then((dom) => {
+    dom.window.$ = $(dom.window);
+    ruleImageAlt.applyRule(dom.window, reporter);
+    rulePageLang.applyRule(dom.window, reporter);
+    msg = reporter.print();
+
+    const o = {
+      owner: owner,
+      repo: repo,
+      commit_sha: sha,
+      body: msg,
+    };
+    console.log(o);
+    await octokit.repos.createCommitComment(o);
+    // });
   } catch (error) {
     core.setFailed(error.message);
   }
