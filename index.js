@@ -68,16 +68,19 @@ async function main() {
       dom.window.$ = $(dom.window);
       ruleImageAlt.applyRule(dom.window, reporter);
       rulePageLang.applyRule(dom.window, reporter);
-      msg = reporter.print();
-      console.log(msg);
+      // msg = reporter.print();
+      console.log('A');
+      console.log(reporter);
+      console.log('B');
 
       const o = {
         owner: owner,
         repo: repo,
         commit_sha: sha,
-        body: msg,
+        body: 'Did this post?',
       };
       console.log(o);
+      console.log('C');
       octokit.repos.createCommitComment(o);
     });
   } catch (error) {
