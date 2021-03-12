@@ -83,7 +83,7 @@ async function main() {
       msg = reporter.print();
 
       sendCommitComment(msg).then(() => {
-        if (reporter.getMessages().length > 0) {
+        if (msg.length > 0) {
           core.setFailed('Unresolved accessibility issues');
         }
       })
