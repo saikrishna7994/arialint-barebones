@@ -65,20 +65,20 @@ async function main() {
     const reporter = new Reporter();
     // const dom = await JSDOM.fromFile(files[0]);
     JSDOM.fromFile(files[0]).then((dom) => {
-    dom.window.$ = $(dom.window);
-    ruleImageAlt.applyRule(dom.window, reporter);
-    rulePageLang.applyRule(dom.window, reporter);
-    msg = reporter.print();
-    console.log(msg);
+      dom.window.$ = $(dom.window);
+      ruleImageAlt.applyRule(dom.window, reporter);
+      rulePageLang.applyRule(dom.window, reporter);
+      msg = reporter.print();
+      console.log(msg);
 
-    const o = {
-      owner: owner,
-      repo: repo,
-      commit_sha: sha,
-      body: msg,
-    };
-    console.log(o);
-    await octokit.repos.createCommitComment(o);
+      const o = {
+        owner: owner,
+        repo: repo,
+        commit_sha: sha,
+        body: msg,
+      };
+      console.log(o);
+      octokit.repos.createCommitComment(o);
     });
   } catch (error) {
     core.setFailed(error.message);
