@@ -36,9 +36,10 @@ async function main() {
       },
     });
 
-    console.log(files[0]);
+    // console.log(files[0]);
     const reporter = new Reporter();
     JSDOM.fromFile(files[0]).then((dom) => {
+      console.log(dom);
       dom.window.$ = $(dom.window);
       ruleImageAlt.applyRule(dom.window, reporter);
     });
