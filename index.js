@@ -63,8 +63,8 @@ async function main() {
     const octokit = github.getOctokit(core.getInput('token'));
 
     const reporter = new Reporter();
-    const dom = await JSDOM.fromFile(files[0]);
-    // JSDOM.fromFile(files[0]).then((dom) => {
+    // const dom = await JSDOM.fromFile(files[0]);
+    JSDOM.fromFile(files[0]).then((dom) => {
     dom.window.$ = $(dom.window);
     ruleImageAlt.applyRule(dom.window, reporter);
     rulePageLang.applyRule(dom.window, reporter);
@@ -79,7 +79,7 @@ async function main() {
     };
     console.log(o);
     await octokit.repos.createCommitComment(o);
-    // });
+    });
   } catch (error) {
     core.setFailed(error.message);
   }
