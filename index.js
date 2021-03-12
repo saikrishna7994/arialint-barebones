@@ -5,58 +5,68 @@ const { JSDOM } = jsdom;
 const $ = require('jquery');
 
 async function main() {
-  const rule = new Rule({
-    name: 'Language of Page',
+  // const rule = new Rule({
+  //   name: 'Language of Page',
 
-    message: 'Please add the lang attribute to the HTML tag',
+  //   message: 'Please add the lang attribute to the HTML tag',
+
+  //   ruleUrl:
+  //     'https://www.w3.org/TR/UNDERSTANDING-WCAG20/meaning-doc-lang-id.html',
+
+  //   level: 'A',
+
+  //   template: false,
+
+  //   callback: function (dom, reporter) {
+  //     // var lang = dom.$('html').attr('lang');
+  //     if (typeof lang === 'undefined' || lang === '') {
+  //       throw {
+  //         reportType: 'error',
+  //         el: dom.$('html').parent().html(),
+  //       };
+  //     }
+  //   },
+  // });
+  const rule = new Rule({
+    name: 'All img must have alt',
+
+    message: 'Please add the alt attribute to this image',
 
     ruleUrl:
       'https://www.w3.org/TR/UNDERSTANDING-WCAG20/meaning-doc-lang-id.html',
 
     level: 'A',
 
-    template: false,
+    template: true,
 
-    callback: function (dom, reporter) {
-      // console.log(dom);
-      var lang = dom.$('html').attr('lang');
-      // console.log(dom.$('html').attr('lang'));
-      if (typeof lang === 'undefined' || lang === '') {
-        throw {
-          reportType: 'error',
-          el: dom.$('html').parent().html(),
-        };
-      }
+    callback: function (dom) {
+      dom.$('img').each(function () {
+        if (typeof dom.$(this).attr('alt') === 'undefined') {
+          throw {
+            reportType: 'error',
+            el: dom.$(this).parent().html(),
+          };
+        }
+      });
     },
   });
 
-  const { window } = await new JSDOM(`<!DOCTYPE html><p>Hello world</p>`);
+  const dom = await new JSDOM(
+    `<!DOCTYPE html lang="en">
+    <img src="https://www.w3schools.com/images/w3schools_green.jpg" >
+    <p>Hello world</p>`
+  );
+  dom.window.$ = $(dom.window);
+  // console.log(dom.window.$('img'));
+  // console.log(dom.window.document.querySelector("img"))
+  // console.log(dom.window.document.documentElement.lang);
+  // var lang = dom.window.document.querySelector('[lang]');
 
-  // const dom = await jsdom.fromURL('https://github.com/');
-  window.$ = $(window);
-  // console.log(window);
+  // window.$ = $(window);
 
   const reporter = new Reporter();
-  // const rule = new Rule({
-  //   id: 123,
-  //   name: 'sally',
-  // });
 
-  // // console.log(rule.getName());
-
-  // jsdom.env(uri, function (err, window) {
-  //   window.$ = $(window);
-
-  //   if (!err) {
-  //     that.dom = window;
-  //     callback();
-  //   } else {
-  //     console.log('Error on jsdom.env: ' + err);
-  //     throw 'Error: ' + uri + ' cant be accessed.';
-  //   }
-  // });
-
-  rule.applyRule(window, reporter);
+  rule.applyRule(dom.window, reporter);
 
   console.log(reporter);
 }
