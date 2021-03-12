@@ -37,13 +37,13 @@ async function main() {
     });
 
     console.log(files[0]);
-    const dom = await new JSDOM.fromFile(files[0]);
-    dom.window.$ = $(dom.window);
     const reporter = new Reporter();
-
+    JSDOM.fromFile(files[0]).then((dom) => {
+      dom.window.$ = $(dom.window);
+      ruleImageAlt.applyRule(dom.window, reporter);
+    });
+    // const dom = await new JSDOM.fromFile(files[0]);
     // rulePageLang.applyRule(dom.window, reporter);
-    ruleImageAlt.applyRule(dom.window, reporter);
-
     console.log(reporter);
   } catch (error) {
     core.setFailed(error.message);
