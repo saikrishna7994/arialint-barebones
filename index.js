@@ -63,24 +63,19 @@ async function main() {
     const octokit = github.getOctokit(core.getInput('token'));
 
     const reporter = new Reporter();
-    // const dom = await JSDOM.fromFile(files[0]);
     JSDOM.fromFile(files[0]).then((dom) => {
       dom.window.$ = $(dom.window);
       ruleImageAlt.applyRule(dom.window, reporter);
       rulePageLang.applyRule(dom.window, reporter);
-      // msg = reporter.print();
-      console.log('A');
-      console.log(reporter);
-      console.log('B');
+      msg = reporter.print();
 
       const o = {
         owner: owner,
         repo: repo,
         commit_sha: sha,
-        body: 'Did this post?',
+        body: msg,
       };
       console.log(o);
-      console.log('C');
       octokit.repos.createCommitComment(o);
     });
   } catch (error) {
