@@ -67,13 +67,7 @@ async function main() {
       dom.window.$ = $(dom.window);
       ruleImageAlt.applyRule(dom.window, reporter);
       rulePageLang.applyRule(dom.window, reporter);
-      console.log('A');
       const msg = reporter.print();
-      console.log('B');
-      console.log(reporter);
-      console.log('B2');
-      console.log(msg);
-      console.log('C');
 
       const o = {
         owner: owner,
@@ -83,6 +77,9 @@ async function main() {
       };
       console.log(o);
       octokit.repos.createCommitComment(o);
+      if (reporter.getMessages().length > 0) {
+        core.setFailed('Unresolved accessibility issues');
+      }
     });
   } catch (error) {
     core.setFailed(error.message);
