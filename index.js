@@ -76,16 +76,17 @@ async function main() {
     const reporter = new Reporter();
     let msg = ''
 
-    JSDOM.fromFile(files[0]).then(async (dom) => {
+    JSDOM.fromFile(files[0]).then((dom) => {
       dom.window.$ = $(dom.window);
       ruleImageAlt.applyRule(dom.window, reporter);
       rulePageLang.applyRule(dom.window, reporter);
       msg = reporter.print();
 
-      await sendCommitComment(msg)
-      if (reporter.getMessages().length > 0) {
-        core.setFailed('Unresolved accessibility issues');
-      }
+      sendCommitComment(msg).then(() => {
+        if (reporter.getMessages().length > 0) {
+          core.setFailed('Unresolved accessibility issues');
+        }
+      })
     });
   } catch (error) {
     if (msg !== '') sendCommitComment(msg)
