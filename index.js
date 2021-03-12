@@ -14,16 +14,16 @@ async function main() {
 
     const rulePageLang = new Rule({
       name: 'Language of Page',
-  
+
       message: 'Please add the lang attribute to the HTML tag',
-  
+
       ruleUrl:
         'https://www.w3.org/TR/UNDERSTANDING-WCAG20/meaning-doc-lang-id.html',
-  
+
       level: 'A',
-  
+
       template: false,
-  
+
       callback: function (dom) {
         var lang = dom.$('html')[0].lang;
         if (typeof lang === 'undefined' || lang === '') {
@@ -40,8 +40,7 @@ async function main() {
 
       message: 'Please add the alt attribute to this image',
 
-      ruleUrl:
-        'https://www.w3.org/TR/UNDERSTANDING-WCAG20/meaning-doc-lang-id.html',
+      ruleUrl: 'https://www.w3.org/TR/UNDERSTANDING-WCAG20/text-equiv.html',
 
       level: 'A',
 
@@ -64,10 +63,8 @@ async function main() {
       dom.window.$ = $(dom.window);
       ruleImageAlt.applyRule(dom.window, reporter);
       rulePageLang.applyRule(dom.window, reporter);
-      console.log(reporter)
+      console.log(reporter);
     });
-    
-    
   } catch (error) {
     core.setFailed(error.message);
   }
