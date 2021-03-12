@@ -26,7 +26,6 @@ async function main() {
   
       callback: function (dom) {
         var lang = dom.$('html')[0].lang;
-        console.log({lang, isThere: typeof lang === 'undefined' || lang === '' })
         if (typeof lang === 'undefined' || lang === '') {
           throw {
             reportType: 'error',
@@ -65,6 +64,7 @@ async function main() {
       dom.window.$ = $(dom.window);
       ruleImageAlt.applyRule(dom.window, reporter);
       rulePageLang.applyRule(dom.window, reporter);
+      console.log(reporter)
     });
     
     
