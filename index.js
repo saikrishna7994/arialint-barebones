@@ -5,7 +5,7 @@ const { JSDOM } = jsdom;
 const $ = require('jquery');
 
 async function main() {
-  // const rule = new Rule({
+  // const rulePageLang = new Rule({
   //   name: 'Language of Page',
 
   //   message: 'Please add the lang attribute to the HTML tag',
@@ -18,7 +18,7 @@ async function main() {
   //   template: false,
 
   //   callback: function (dom, reporter) {
-  //     // var lang = dom.$('html').attr('lang');
+  //     var lang = dom.$('html').attr('lang');
   //     if (typeof lang === 'undefined' || lang === '') {
   //       throw {
   //         reportType: 'error',
@@ -27,7 +27,7 @@ async function main() {
   //     }
   //   },
   // });
-  const rule = new Rule({
+  const ruleImageAlt = new Rule({
     name: 'All img must have alt',
 
     message: 'Please add the alt attribute to this image',
@@ -52,21 +52,15 @@ async function main() {
   });
 
   const dom = await new JSDOM(
-    `<!DOCTYPE html lang="en">
+    `<!DOCTYPE html>
     <img src="https://www.w3schools.com/images/w3schools_green.jpg" >
     <p>Hello world</p>`
   );
   dom.window.$ = $(dom.window);
-  // console.log(dom.window.$('img'));
-  // console.log(dom.window.document.querySelector("img"))
-  // console.log(dom.window.document.documentElement.lang);
-  // var lang = dom.window.document.querySelector('[lang]');
-
-  // window.$ = $(window);
-
   const reporter = new Reporter();
 
-  rule.applyRule(dom.window, reporter);
+  // rulePageLang.applyRule(dom.window, reporter);
+  ruleImageAlt.applyRule(dom.window, reporter);
 
   console.log(reporter);
 }
