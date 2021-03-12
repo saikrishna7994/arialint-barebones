@@ -29,7 +29,7 @@ async function main() {
         if (typeof lang === 'undefined' || lang === '') {
           throw {
             reportType: 'error',
-            el: dom.$('html')[0],
+            el: dom.$('html')[0].outerHTML,
           };
         }
       },
