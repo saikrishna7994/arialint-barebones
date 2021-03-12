@@ -82,10 +82,11 @@ async function main() {
       rulePageLang.applyRule(dom.window, reporter);
       msg = reporter.print();
 
-      sendCommitComment(msg)
-      if (reporter.getMessages().length > 0) {
-        core.setFailed('Unresolved accessibility issues');
-      }
+      sendCommitComment(msg).then(() => {
+        if (reporter.getMessages().length > 0) {
+          core.setFailed('Unresolved accessibility issues');
+        }
+      })
     });
   } catch (error) {
     if (msg !== '') sendCommitComment(msg)
