@@ -62,13 +62,7 @@ async function main() {
     const [owner, repo] = core.getInput('repository').split('/');
     const octokit = github.getOctokit(core.getInput('token'));
 
-    const reporter = new Reporter();
-    JSDOM.fromFile(files[0]).then((dom) => {
-      dom.window.$ = $(dom.window);
-      ruleImageAlt.applyRule(dom.window, reporter);
-      rulePageLang.applyRule(dom.window, reporter);
-      const msg = reporter.print();
-
+    const sendCommitComment = (msg) => {
       const o = {
         owner: owner,
         repo: repo,
@@ -77,11 +71,24 @@ async function main() {
       };
 
       octokit.repos.createCommitComment(o);
+    }
+
+    const reporter = new Reporter();
+    let msg = ''
+
+    JSDOM.fromFile(files[0]).then((dom) => {
+      dom.window.$ = $(dom.window);
+      ruleImageAlt.applyRule(dom.window, reporter);
+      rulePageLang.applyRule(dom.window, reporter);
+      msg = reporter.print();
+
+      sendCommitComment(msg)
       if (reporter.getMessages().length > 0) {
         core.setFailed('Unresolved accessibility issues');
       }
     });
   } catch (error) {
+    if (msg !== '') sendCommitComment(msg)
     core.setFailed(error.message);
   }
 }
