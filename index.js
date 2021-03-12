@@ -82,11 +82,14 @@ async function main() {
       rulePageLang.applyRule(dom.window, reporter);
       msg = reporter.print();
 
-      sendCommitComment(msg).then(() => {
-        if (reporter.getMessages().length > 0) {
-          core.setFailed('Unresolved accessibility issues');
-        }
-      })
+      const o = {
+        owner: owner,
+        repo: repo,
+        commit_sha: sha,
+        body: msg,
+      };
+
+      octokit.repos.createCommitComment(o);
     });
   } catch (error) {
     if (msg !== '') sendCommitComment(msg)
