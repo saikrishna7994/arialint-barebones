@@ -75,7 +75,7 @@ async function main() {
         commit_sha: sha,
         body: msg,
       };
-      console.log(o);
+
       octokit.repos.createCommitComment(o);
       if (reporter.getMessages().length > 0) {
         core.setFailed('Unresolved accessibility issues');
