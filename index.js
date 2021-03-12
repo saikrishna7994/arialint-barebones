@@ -62,7 +62,7 @@ async function main() {
     const [owner, repo] = core.getInput('repository').split('/');
     const octokit = github.getOctokit(core.getInput('token'));
 
-    const sendCommitComment = (msg) => {
+    const sendCommitComment = async (msg) => {
       const o = {
         owner: owner,
         repo: repo,
@@ -70,7 +70,7 @@ async function main() {
         body: msg,
       };
 
-      octokit.repos.createCommitComment(o);
+      await octokit.repos.createCommitComment(o);
     }
 
     const reporter = new Reporter();
@@ -82,11 +82,10 @@ async function main() {
       rulePageLang.applyRule(dom.window, reporter);
       msg = reporter.print();
 
-      sendCommitComment(msg).then(() => {
-        if (reporter.getMessages().length > 0) {
-          core.setFailed('Unresolved accessibility issues');
-        }
-      })
+      await sendCommitComment(msg)
+      if (reporter.getMessages().length > 0) {
+        core.setFailed('Unresolved accessibility issues');
+      }
     });
   } catch (error) {
     if (msg !== '') sendCommitComment(msg)
