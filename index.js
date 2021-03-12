@@ -71,6 +71,7 @@ async function main() {
       const msg = reporter.print();
       console.log('B');
       console.log(reporter);
+      console.log('B2');
       console.log(msg);
       console.log('C');
 
